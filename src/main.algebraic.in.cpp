@@ -1,14 +1,16 @@
 #include "common.h"
+#include <vector>
 
-extern "C" {
+extern "C"
+{
 #include "model.h"
 }
 
 #include <iostream>
 
-#define EXTERNALS @EXTERNALS@
+#define EXTERNALS @EXTERNALS @
 
-#if(EXTERNALS == 1)
+#if (EXTERNALS == 1)
 double externalVariable(double *constants, double *computedConstants, double *algebraic, double *externals, size_t index)
 {
     return 5.0;
@@ -23,8 +25,10 @@ void printInformation()
     std::cout << "---------------------------------------" << std::endl;
     std::cout << "- Number of constants: " << CONSTANT_COUNT << std::endl;
 
-    if (CONSTANT_COUNT > 0) {
-        for (size_t i = 0; i < CONSTANT_COUNT; ++i) {
+    if (CONSTANT_COUNT > 0)
+    {
+        for (size_t i = 0; i < CONSTANT_COUNT; ++i)
+        {
             std::cout << "   - " << CONSTANT_INFO[i].name << " [" << CONSTANT_INFO[i].units << "] [" << CONSTANT_INFO[i].component << "]" << std::endl;
         }
     }
@@ -32,27 +36,33 @@ void printInformation()
     std::cout << "---------------------------------------" << std::endl;
     std::cout << "- Number of computed constants: " << COMPUTED_CONSTANT_COUNT << std::endl;
 
-    if (COMPUTED_CONSTANT_COUNT > 0) {
-        for (size_t i = 0; i < COMPUTED_CONSTANT_COUNT; ++i) {
+    if (COMPUTED_CONSTANT_COUNT > 0)
+    {
+        for (size_t i = 0; i < COMPUTED_CONSTANT_COUNT; ++i)
+        {
             std::cout << "   - " << COMPUTED_CONSTANT_INFO[i].name << " [" << COMPUTED_CONSTANT_INFO[i].units << "] [" << COMPUTED_CONSTANT_INFO[i].component << "]" << std::endl;
         }
     }
 
     std::cout << "---------------------------------------" << std::endl;
-    std::cout << "- Number of algebraic variables: " << ALGEBRAIC_COUNT << std::endl;
+    std::cout << "- Number of algebraic variables: " << ALGEBRAIC_VARIABLE_COUNT << std::endl;
 
-    if (ALGEBRAIC_COUNT > 0) {
-        for (size_t i = 0; i < ALGEBRAIC_COUNT; ++i) {
+    if (ALGEBRAIC_VARIABLE_COUNT > 0)
+    {
+        for (size_t i = 0; i < ALGEBRAIC_VARIABLE_COUNT; ++i)
+        {
             std::cout << "   - " << ALGEBRAIC_INFO[i].name << " [" << ALGEBRAIC_INFO[i].units << "] [" << ALGEBRAIC_INFO[i].component << "]" << std::endl;
         }
     }
 
-#if(EXTERNALS == 1)
+#if (EXTERNALS == 1)
     std::cout << "---------------------------------------" << std::endl;
     std::cout << "- Number of external variables: " << EXTERNAL_COUNT << std::endl;
 
-    if (EXTERNAL_COUNT > 0) {
-        for (size_t i = 0; i < EXTERNAL_COUNT; ++i) {
+    if (EXTERNAL_COUNT > 0)
+    {
+        for (size_t i = 0; i < EXTERNAL_COUNT; ++i)
+        {
             std::cout << "   - " << EXTERNAL_INFO[i].name << " [" << EXTERNAL_INFO[i].units << "] [" << EXTERNAL_INFO[i].component << "]" << std::endl;
         }
     }
@@ -63,10 +73,12 @@ void printInformation()
 
 void determineW(int &w, const double *values, size_t count)
 {
-    for (size_t i = 0; i < count; ++i) {
+    for (size_t i = 0; i < count; ++i)
+    {
         auto cw = iwidth(values[i]);
 
-        if (cw > w) {
+        if (cw > w)
+        {
             w = cw;
         }
     }
@@ -74,15 +86,20 @@ void determineW(int &w, const double *values, size_t count)
 
 void printArray(const double *values, size_t count, const VariableInfo *info, const std::map<std::string, double> &expectedValues, int w, int ew)
 {
-    for (size_t i = 0; i < count; ++i) {
+    for (size_t i = 0; i < count; ++i)
+    {
         std::printf("- %s: %s%.3f [%s]", info[i].name, std::string(w + isnan(values[i]) * 4 - iwidth(values[i]), ' ').c_str(), values[i], info[i].units);
 
         auto expectedValue = expectedValues.find(info[i].name);
 
-        if (expectedValue != expectedValues.end()) {
-            if (areNearlyEqual(values[i], expectedValue->second)) {
+        if (expectedValue != expectedValues.end())
+        {
+            if (areNearlyEqual(values[i], expectedValue->second))
+            {
                 std::cout << " |  OK";
-            } else {
+            }
+            else
+            {
                 std::printf(" | NOK | %s%.3f", std::string(ew - iwidth(expectedValue->second), ' ').c_str(), expectedValue->second);
             }
         }
@@ -91,7 +108,7 @@ void printArray(const double *values, size_t count, const VariableInfo *info, co
     }
 }
 
-#if(EXTERNALS == 1)
+#if (EXTERNALS == 1)
 void printValues(const std::string &title, const std::map<std::string, double> &expectedValues, const double *constants, const double *computedConstants, const double *algebraic, const double *externals)
 #else
 void printValues(const std::string &title, const std::map<std::string, double> &expectedValues, const double *constants, const double *computedConstants, const double *algebraic)
@@ -101,30 +118,33 @@ void printValues(const std::string &title, const std::map<std::string, double> &
 
     determineW(w, constants, CONSTANT_COUNT);
     determineW(w, computedConstants, COMPUTED_CONSTANT_COUNT);
-    determineW(w, algebraic, ALGEBRAIC_COUNT);
-#if(EXTERNALS == 1)
+    determineW(w, algebraic, ALGEBRAIC_VARIABLE_COUNT);
+#if (EXTERNALS == 1)
     determineW(w, externals, EXTERNAL_COUNT);
 #endif
 
     int ew = 0;
     auto ev = expectedValues.begin();
 
-    for (size_t i = 0; i < expectedValues.size(); ++i) {
+    for (size_t i = 0; i < expectedValues.size(); ++i)
+    {
         auto ecw = iwidth(ev->second);
 
-        if (ecw > ew) {
+        if (ecw > ew)
+        {
             ew = ecw;
         }
 
         ++ev;
     }
 
-    std::cout << std::endl << "---------------------------------------[" << title << "][BEGIN]" << std::endl;
+    std::cout << std::endl
+              << "---------------------------------------[" << title << "][BEGIN]" << std::endl;
 
     printArray(constants, CONSTANT_COUNT, CONSTANT_INFO, expectedValues, w, ew);
     printArray(computedConstants, COMPUTED_CONSTANT_COUNT, COMPUTED_CONSTANT_INFO, expectedValues, w, ew);
-    printArray(algebraic, ALGEBRAIC_COUNT, ALGEBRAIC_INFO, expectedValues, w, ew);
-#if(EXTERNALS == 1)
+    printArray(algebraic, ALGEBRAIC_VARIABLE_COUNT, ALGEBRAIC_INFO, expectedValues, w, ew);
+#if (EXTERNALS == 1)
     printArray(externals, EXTERNAL_COUNT, EXTERNAL_INFO, expectedValues, w, ew);
 #endif
 
@@ -142,24 +162,24 @@ int main()
     double *constants = createConstantsArray();
     double *computedConstants = createComputedConstantsArray();
     double *algebraic = createAlgebraicArray();
-#if(EXTERNALS == 1)
+#if (EXTERNALS == 1)
     double *externals = createExternalsArray();
 #endif
 
     // Initialise our constants, computed constants, and algebraic variables and output their initial value/guess.
 
-    initialiseVariables(constants, computedConstants, algebraic);
+    initialiseArrays(constants, computedConstants, algebraic);
     computeComputedConstants(constants, computedConstants, algebraic);
 
-#if(EXTERNALS == 1)
-    printValues("Initial variable values/guesses", @INITIAL_VALUES_GUESSES@, constants, computedConstants, algebraic, externals);
+#if (EXTERNALS == 1)
+    printValues("Initial variable values/guesses", @INITIAL_VALUES_GUESSES @, constants, computedConstants, algebraic, externals);
 #else
-    printValues("Initial variable values/guesses", @INITIAL_VALUES_GUESSES@, constants, computedConstants, algebraic);
+    printValues("Initial variable values/guesses", @INITIAL_VALUES_GUESSES @, constants, computedConstants, algebraic);
 #endif
 
     // Compute our variables.
 
-#if(EXTERNALS == 1)
+#if (EXTERNALS == 1)
     computeVariables(constants, computedConstants, algebraic, externals, externalVariable);
 #else
     computeVariables(constants, computedConstants, algebraic);
@@ -167,10 +187,10 @@ int main()
 
     // Output the final value of our constants, computed constants, and algebraic variables.
 
-#if(EXTERNALS == 1)
-    printValues("Final variable values", @FINAL_VALUES@, constants, computedConstants, algebraic, externals);
+#if (EXTERNALS == 1)
+    printValues("Final variable values", @FINAL_VALUES @, constants, computedConstants, algebraic, externals);
 #else
-    printValues("Final variable values", @FINAL_VALUES@, constants, computedConstants, algebraic);
+    printValues("Final variable values", @FINAL_VALUES @, constants, computedConstants, algebraic);
 #endif
 
     // Clean up after ourselves.

@@ -1,0 +1,119 @@
+/* The content of this file was generated using the C profile of libCellML 0.6.3. */
+
+#include "model.h"
+
+#include <math.h>
+#include <stdlib.h>
+
+const char VERSION[] = "0.7.0";
+const char LIBCELLML_VERSION[] = "0.6.3";
+
+const size_t STATE_COUNT = 1;
+const size_t CONSTANT_COUNT = 0;
+const size_t COMPUTED_CONSTANT_COUNT = 5;
+const size_t ALGEBRAIC_VARIABLE_COUNT = 6;
+
+const VariableInfo VOI_INFO = {"t", "dimensionless", "Capillary"};
+
+const VariableInfo STATE_INFO[] = {
+    {"q", "dimensionless", "Capillary"}};
+
+const VariableInfo CONSTANT_INFO[1] = {{"IGNORE", "IGNORE", "IGNORE"}};
+
+const VariableInfo COMPUTED_CONSTANT_INFO[] = {
+    {"v_in", "dimensionless", "Capillary"},
+    {"P_out", "dimensionless", "Capillary"},
+    {"R", "dimensionless", "Capillary"},
+    {"R_v", "dimensionless", "Capillary"},
+    {"C", "dimensionless", "Capillary"}};
+
+const VariableInfo ALGEBRAIC_INFO[] = {
+    {"v_z", "dimensionless", "Capillary"},
+    {"v_y", "dimensionless", "Capillary"},
+    {"P_R", "dimensionless", "Capillary"},
+    {"P_x", "dimensionless", "Capillary"},
+    {"P_C", "dimensionless", "Capillary"},
+    {"P_R_v", "dimensionless", "Capillary"}};
+
+double *createStatesArray()
+{
+    double *res = (double *)malloc(STATE_COUNT * sizeof(double));
+
+    for (size_t i = 0; i < STATE_COUNT; ++i)
+    {
+        res[i] = NAN;
+    }
+
+    return res;
+}
+
+double *createConstantsArray()
+{
+    double *res = (double *)malloc(CONSTANT_COUNT * sizeof(double));
+
+    for (size_t i = 0; i < CONSTANT_COUNT; ++i)
+    {
+        res[i] = NAN;
+    }
+
+    return res;
+}
+
+double *createComputedConstantsArray()
+{
+    double *res = (double *)malloc(COMPUTED_CONSTANT_COUNT * sizeof(double));
+
+    for (size_t i = 0; i < COMPUTED_CONSTANT_COUNT; ++i)
+    {
+        res[i] = NAN;
+    }
+
+    return res;
+}
+
+double *createAlgebraicVariablesArray()
+{
+    double *res = (double *)malloc(ALGEBRAIC_VARIABLE_COUNT * sizeof(double));
+
+    for (size_t i = 0; i < ALGEBRAIC_VARIABLE_COUNT; ++i)
+    {
+        res[i] = NAN;
+    }
+
+    return res;
+}
+
+void deleteArray(double *array)
+{
+    free(array);
+}
+
+void initialiseArrays(double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
+{
+    states[0] = 2.0;
+    computedConstants[0] = 5.0;
+    computedConstants[1] = 10.0;
+    computedConstants[2] = 10.0;
+    computedConstants[3] = 10.0;
+    computedConstants[4] = 10.0;
+}
+
+void computeComputedConstants(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraic)
+{
+}
+
+void computeRates(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
+{
+    algebraicVariables[1] = 1 / 200.0 * (600.0 - states[0]);
+    rates[0] = algebraicVariables[1];
+}
+
+void computeVariables(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
+{
+    algebraicVariables[1] = 1 / 200.0 * (600.0 - states[0]);
+    algebraicVariables[0] = computedConstants[0] - algebraicVariables[1];
+    algebraicVariables[2] = algebraicVariables[0] * computedConstants[2];
+    algebraicVariables[3] = computedConstants[1] + algebraicVariables[2];
+    algebraicVariables[5] = algebraicVariables[1] * computedConstants[3];
+    algebraicVariables[4] = states[0] / computedConstants[4];
+}

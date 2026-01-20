@@ -9,8 +9,10 @@ def nla_solve(objective_function, u, n, data):
         objective_function(u, f, data)
 
         return f
-
-    return fsolve(func, u)
+    
+    x = fsolve(func, u)
+    
+    return x
 
 
 def area_nearly_equal(a, b):

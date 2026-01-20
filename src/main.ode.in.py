@@ -1,7 +1,7 @@
 import importlib.util
 from scipy.integrate import solve_ivp
 import os
-
+import time
 
 EXTERNALS = @EXTERNALS@
 
@@ -69,10 +69,10 @@ def print_information(model):
             )
 
     print("---------------------------------------")
-    print(f"- Number of algebraic variables: {model.ALGEBRAIC_COUNT}")
+    print(f"- Number of algebraic variables: {model.ALGEBRAIC_VARIABLE_COUNT}")
 
-    if model.ALGEBRAIC_COUNT > 0:
-        for i in range(0, model.ALGEBRAIC_COUNT):
+    if model.ALGEBRAIC_VARIABLE_COUNT > 0:
+        for i in range(0, model.ALGEBRAIC_VARIABLE_COUNT):
             print(
                 f"   - {model.ALGEBRAIC_INFO[i]['name']} [{model.ALGEBRAIC_INFO[i]['units']}] [{model.ALGEBRAIC_INFO[i]['component']}]"
             )
@@ -102,7 +102,7 @@ def print_headers(file):
     for i in range(0, model.COMPUTED_CONSTANT_COUNT):
         file.write(f",{model.COMPUTED_CONSTANT_INFO[i]['name']}")
 
-    for i in range(0, model.ALGEBRAIC_COUNT):
+    for i in range(0, model.ALGEBRAIC_VARIABLE_COUNT):
         file.write(f",{model.ALGEBRAIC_INFO[i]['name']}")
 
     if EXTERNALS:
@@ -124,7 +124,7 @@ def print_values(file, voi, states, constants, computed_constants, algebraic, ex
     for i in range(0, model.COMPUTED_CONSTANT_COUNT):
         file.write(f",{computed_constants[i]}")
 
-    for i in range(0, model.ALGEBRAIC_COUNT):
+    for i in range(0, model.ALGEBRAIC_VARIABLE_COUNT):
         file.write(f",{algebraic[i]}")
 
     if EXTERNALS:
@@ -156,6 +156,9 @@ spec.loader.exec_module(model)
 
 print_information(model)
 
+# Start timing
+start_time = time.perf_counter()
+
 # Create our various arrays.
 
 voi = 0.0
@@ -163,14 +166,14 @@ states = model.create_states_array()
 rates = model.create_states_array()
 constants = model.create_constants_array()
 computed_constants = model.create_computed_constants_array()
-algebraic = model.create_algebraic_array()
+algebraic = model.create_algebraic_variables_array()
 
 if EXTERNALS:
     externals = model.create_externals_array()
 
 # Initialise our constants, computed constants, and algebraic variables and output their initial value/guess.
 
-model.initialise_variables(states, rates, constants, computed_constants, algebraic)
+model.initialise_arrays(states, rates, constants, computed_constants, algebraic)
 model.compute_computed_constants(states, rates, constants, computed_constants, algebraic)
 
 if EXTERNALS:
@@ -237,3 +240,8 @@ for output_point in output_points:
         print_values(file, voi, states, constants, computed_constants, algebraic)
 
 file.close()
+
+# finish time count
+end_time = time.perf_counter()
+
+print(f"TIME ELAPSED: {(end_time-start_time):.6f} seconds")
