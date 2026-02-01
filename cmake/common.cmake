@@ -149,7 +149,6 @@ function(build_executable EXECUTABLE TYPE)
         )
 
         target_link_libraries(${EXECUTABLE} SUNDIALS::cvode SUNDIALS::kinsol)
-        message(">>> Copying exec ${EXECUTABLE} to binary dir ${CMAKE_BINARY_DIR}/${EXECUTABLE}")
 
         add_custom_command(TARGET ${EXECUTABLE} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy ${EXECUTABLE}.exe ${CMAKE_BINARY_DIR}/${EXECUTABLE}.exe)

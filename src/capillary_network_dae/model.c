@@ -2,6 +2,8 @@
 
 #include "model.h"
 
+#include <stdio.h>
+
 #include <math.h>
 #include <stdlib.h>
 
@@ -78,14 +80,14 @@ const VariableInfo COMPUTED_CONSTANT_INFO[] = {
     {"v_out_total", "m3_per_s", "capillary_1_module"}};
 
 const VariableInfo ALGEBRAIC_INFO[] = {
-    {"R", "Js_per_m6", "pericyte_0_module"},
-    {"R", "Js_per_m6", "pericyte_1_module"},
-    {"u_in", "J_per_m3", "pericyte_1_module"},
-    {"u", "J_per_m3", "input_vessel_module"},
-    {"u_C", "J_per_m3", "input_vessel_module"},
-    {"v", "m3_per_s", "pericyte_1_module"},
-    {"v", "m3_per_s", "pericyte_0_module"},
-    {"u_C_d", "J_per_m3", "input_vessel_module"},
+    {"R", "Js_per_m6", "pericyte_0_module"},      // 0
+    {"R", "Js_per_m6", "pericyte_1_module"},      // 1
+    {"u_in", "J_per_m3", "pericyte_1_module"},    // 2
+    {"u", "J_per_m3", "input_vessel_module"},     // 3
+    {"u_C", "J_per_m3", "input_vessel_module"},   // 4
+    {"v", "m3_per_s", "pericyte_1_module"},       // 5
+    {"v", "m3_per_s", "pericyte_0_module"},       // 6
+    {"u_C_d", "J_per_m3", "input_vessel_module"}, // 7
     {"u", "J_per_m3", "pericyte_0_module"},
     {"u", "J_per_m3", "pericyte_1_module"},
     {"u", "J_per_m3", "capillary_0_module"},
@@ -267,16 +269,16 @@ void computeRates(double voi, double *states, double *rates, double *constants, 
     rates[0] = (algebraicVariables[3] - algebraicVariables[2] - computedConstants[3] * states[0] - constants[24] * constants[25] * constants[27] * constants[1] * cos(constants[3] * 3.14159265358979 / 180.0)) / computedConstants[1];
     rates[1] = constants[5] - states[0];
     algebraicVariables[7] = states[2] / (computedConstants[2] / 2.0) + constants[4];
+    algebraicVariables[8] = states[4] / constants[7] + constants[6];
+    algebraicVariables[9] = states[6] / constants[9] + constants[8];
+    algebraicVariables[10] = states[7] / computedConstants[7] + constants[14];
+    algebraicVariables[11] = states[8] / computedConstants[12] + constants[21];
     findRoot0(voi, states, rates, constants, computedConstants, algebraicVariables);
     rates[2] = states[0] - algebraicVariables[6] - algebraicVariables[5];
     rates[4] = algebraicVariables[6] - states[3];
     rates[6] = algebraicVariables[5] - states[5];
-    algebraicVariables[8] = states[4] / constants[7] + constants[6];
-    algebraicVariables[10] = states[7] / computedConstants[7] + constants[14];
     rates[3] = (algebraicVariables[8] - algebraicVariables[10] - computedConstants[8] * states[3]) / computedConstants[6];
     rates[7] = states[3] - computedConstants[9];
-    algebraicVariables[9] = states[6] / constants[9] + constants[8];
-    algebraicVariables[11] = states[8] / computedConstants[12] + constants[21];
     rates[5] = (algebraicVariables[9] - algebraicVariables[11] - computedConstants[13] * states[5]) / computedConstants[11];
     rates[8] = states[5] - computedConstants[14];
 }
@@ -285,10 +287,10 @@ void computeVariables(double voi, double *states, double *rates, double *constan
 {
     algebraicVariables[4] = states[1] / (computedConstants[2] / 2.0) + constants[4];
     algebraicVariables[7] = states[2] / (computedConstants[2] / 2.0) + constants[4];
-    algebraicVariables[3] = algebraicVariables[4] + 2.0 * computedConstants[4] * (constants[5] - states[0]);
-    findRoot0(voi, states, rates, constants, computedConstants, algebraicVariables);
     algebraicVariables[8] = states[4] / constants[7] + constants[6];
     algebraicVariables[9] = states[6] / constants[9] + constants[8];
     algebraicVariables[10] = states[7] / computedConstants[7] + constants[14];
     algebraicVariables[11] = states[8] / computedConstants[12] + constants[21];
+    algebraicVariables[3] = algebraicVariables[4] + 2.0 * computedConstants[4] * (constants[5] - states[0]);
+    findRoot0(voi, states, rates, constants, computedConstants, algebraicVariables);
 }

@@ -164,41 +164,22 @@ void printHeaders(std::ofstream &file)
 }
 
 #if (EXTERNALS == 1)
-void printValues(std::ofstream &file, double voi, const double *states, const double *constants, const double *computedConstants, const double *algebraic, const double *externals)
+void collectValues(std::vector<double> &row, double voi, const double *states, const double *constants, const double *computedConstants, const double *algebraic, const double *externals)
 #else
-void printValues(std::ofstream &file, double voi, const double *states, const double *constants, const double *computedConstants, const double *algebraic)
+void collectValues(std::vector<double> &row, double voi, const double *states, const double *constants, const double *computedConstants, const double *algebraic)
 #endif
 {
-    file << voi;
+    row.clear();
+    row.push_back(voi);
 
-    for (size_t i = 0; i < STATE_COUNT; ++i)
-    {
-        file << "," << states[i];
-    }
-
-    for (size_t i = 0; i < CONSTANT_COUNT; ++i)
-    {
-        file << "," << constants[i];
-    }
-
-    for (size_t i = 0; i < COMPUTED_CONSTANT_COUNT; ++i)
-    {
-        file << "," << computedConstants[i];
-    }
-
-    for (size_t i = 0; i < ALGEBRAIC_VARIABLE_COUNT; ++i)
-    {
-        file << "," << algebraic[i];
-    }
+    for (size_t i = 0; i < STATE_COUNT; ++i) row.push_back(states[i]);
+    for (size_t i = 0; i < CONSTANT_COUNT; ++i) row.push_back(constants[i]);
+    for (size_t i = 0; i < COMPUTED_CONSTANT_COUNT; ++i) row.push_back(computedConstants[i]);
+    for (size_t i = 0; i < ALGEBRAIC_VARIABLE_COUNT; ++i) row.push_back(algebraic[i]);
 
 #if (EXTERNALS == 1)
-    for (size_t i = 0; i < EXTERNAL_COUNT; ++i)
-    {
-        file << "," << externals[i];
-    }
+    for (size_t i = 0; i < EXTERNAL_COUNT; ++i) row.push_back(externals[i]);
 #endif
-
-    file << std::endl;
 }
 
 typedef struct
@@ -267,17 +248,17 @@ int main(int argc, char **argv)
     computeVariables(voi, states, rates, constants, computedConstants, algebraic);
 #endif
 
-    std::ofstream file(std::string(argv[0]) + "___c.csv");
-
-    printHeaders(file);
+    std::vector<std::vector<double>> outputBuffer;
 
     if (!@SKIP_FIRST_OUTPUT_POINT@)
     {
+        std::vector<double> row;
 #if (EXTERNALS == 1)
-        printValues(file, voi, states, constants, computedConstants, algebraic, externals);
+        collectValues(row, voi, states, constants, computedConstants, algebraic, externals);
 #else
-        printValues(file, voi, states, constants, computedConstants, algebraic);
+        collectValues(row, voi, states, constants, computedConstants, algebraic);
 #endif
+        outputBuffer.push_back(std::move(row));
     }
 
     // Create our SUNDIALS context.
@@ -353,18 +334,32 @@ int main(int argc, char **argv)
         computeVariables(voi, states, rates, constants, computedConstants, algebraic);
 #endif
 
-        // Output the value of our states, constants, computed constants, and algebraic variables.
-
+        std::vector<double> row;
 #if (EXTERNALS == 1)
-        printValues(file, voi, states, constants, computedConstants, algebraic, externals);
+        collectValues(row, voi, states, constants, computedConstants, algebraic, externals);
 #else
-        printValues(file, voi, states, constants, computedConstants, algebraic);
+        collectValues(row, voi, states, constants, computedConstants, algebraic);
 #endif
+        outputBuffer.push_back(std::move(row));
     }
 
-    file.close();
+    std::cout << "Pre output took: " << getCounter() / 1000 << " seconds" << std::endl;
 
-    // Clean up after ourselves.
+    // Output to csv
+    // std::ofstream file(std::string(argv[0]) + "___c.csv");
+    // printHeaders(file);
+
+    // for (const auto &row : outputBuffer)
+    // {
+    //     for (size_t i = 0; i < row.size(); ++i)
+    //     {
+    //         if (i > 0) file << ",";
+    //         file << row[i];
+    //     }
+    //     file << "\n";
+    // }
+
+    // file.close();
 
     SUNLinSolFree(linearSolver);
     SUNMatDestroy(matrix);
@@ -378,7 +373,7 @@ int main(int argc, char **argv)
     deleteArray(computedConstants);
     deleteArray(algebraic);
 
-    std::cout << "Program took: " << getCounter() / 1000 << " seconds";
+    std::cout << "Program took: " << getCounter() / 1000 << " seconds" << std::endl;
 
     return 0;
 }

@@ -244,6 +244,31 @@ def compute_rates(voi, states, rates, constants, computed_constants, algebraic_v
 
 
 def compute_variables(voi, states, rates, constants, computed_constants, algebraic_variables):
+    algebraicVariables[5] = 1000.0*constants[11]*(states[0]-constants[10])
+    algebraicVariables[4] = 1000.0*constants[13]*pow(states[2], 3.0)*states[1]*(states[0]-constants[12])
+    algebraicVariables[8] = 0.32*4.0*(1.0-(13.0+constants[1]-states[0])/(2.0*4.0)) if lt_func(fabs((13.0+constants[1]-states[0])/4.0), 0.000001) else 0.32*(13.0+constants[1]-states[0])/(exp((13.0+constants[1]-states[0])/4.0)-1.0)
+    algebraicVariables[9] = -0.28*5.0*(1.0-(-(states[0]-constants[1]-40.0)/(2.0*5.0))) if lt_func(fabs(-(states[0]-constants[1]-40.0)/5.0), 0.000001) else -0.28*(states[0]-constants[1]-40.0)/(exp(-(states[0]-constants[1]-40.0)/5.0)-1.0)
+    algebraicVariables[10] = 1.0/(algebraicVariables[8]+algebraicVariables[9])
+    algebraicVariables[11] = algebraicVariables[8]/(algebraicVariables[8]+algebraicVariables[9])
+    algebraicVariables[12] = 0.128*exp((17.0+constants[1]+constants[2]-states[0])/18.0)
+    algebraicVariables[13] = 4.0/(1.0+exp((40.0+constants[2]+constants[1]-states[0])/5.0))
+    algebraicVariables[14] = 1.0/(algebraicVariables[12]+algebraicVariables[13])
+    algebraicVariables[15] = algebraicVariables[12]/(algebraicVariables[12]+algebraicVariables[13])
+    algebraicVariables[3] = 1000.0*constants[15]*pow(states[3], 4.0)*(states[0]-constants[14])
+    algebraicVariables[16] = -0.032*5.0*(1.0-(states[0]-constants[1]-15.0)/(2.0*5.0)) if lt_func(fabs((states[0]-constants[1]-15.0)/5.0), 0.000001) else -0.032*(states[0]-constants[1]-15.0)/(exp((states[0]-constants[1]-15.0)/5.0)-1.0)
+    algebraicVariables[17] = 0.5*40.0*(1.0+(states[0]-constants[1]-10.0)/(2.0*40.0)) if lt_func(fabs(-(states[0]-constants[1]-10.0)/40.0), 0.000001) else 0.5*-(states[0]-constants[1]-10.0)/(exp(-(states[0]-constants[1]-10.0)/40.0)-1.0)
+    algebraicVariables[18] = 1.0/(algebraicVariables[16]+algebraicVariables[17])
+    algebraicVariables[19] = algebraicVariables[16]/(algebraicVariables[16]+algebraicVariables[17])
+    algebraicVariables[2] = 1000.0*constants[16]*states[4]*(states[0]-constants[14])
+    algebraicVariables[20] = 1.0/(1.0+exp(-(states[0]+35.0)/10.0)) if and_func(lt_func(-(states[0]+35.0)/10.0, 25.0), gt_func(-(states[0]+35.0)/10.0, -25.0)) else 1.0
+    algebraicVariables[21] = constants[17]/(3.3*exp((states[0]+35.0)/20.0)+exp(-(states[0]+35.0)/20.0)) if and_func(lt_func((states[0]+35.0)/20.0, 25.0), gt_func((states[0]+35.0)/20.0, -25.0)) else 1.0
+    algebraicVariables[22] = pow(constants[19], 2.0)*pow(constants[3], 2.0)*0.001*states[0]/(constants[4]*constants[5])*0.000001*(states[6]-constants[20]*exp(constants[19]*constants[3]*0.001*states[0]/(constants[4]*constants[5])))/(1.0-exp(0.001*constants[19]*constants[3]*states[0]/(constants[4]*constants[5])))
+    algebraicVariables[1] = 1000.0*constants[18]*pow(states[5], 2.0)*algebraicVariables[22]
+    algebraicVariables[23] = 6.32/(1.0+exp(-(states[0]-5.0)/13.89))
+    algebraicVariables[24] = 0.02*(5.36+(1.31-states[0])/2.0) if lt_func(fabs((1.31-states[0])/5.36), 0.000001) else 0.02*(1.31-states[0])/(1.0-exp((states[0]-1.31)/5.36))
+    algebraicVariables[25] = 1.0/(algebraicVariables[23]+algebraicVariables[24])
+    algebraicVariables[26] = 1.0/(1.0+exp((states[0]+10.0)/-10.0))
+    algebraicVariables[27] = constants[22]*algebraicVariables[1]/(2.0*constants[3]*constants[21])
     algebraicVariables[32] = pow(pow(states[6], constants[33])+pow(constants[34], constants[33]), -1.0)*pow(states[6], constants[33])
     algebraicVariables[29] = pow(constants[36], constants[35])*pow(pow(algebraicVariables[32], constants[35])-pow(constants[36], constants[35])*(-1.0-pow(2.71828182845905, 0.181818181818182*(75.0+states[0]-constants[29]))), -1.0)
     algebraicVariables[37] = constants[31]*pow(algebraicVariables[32]/constants[36], constants[35])

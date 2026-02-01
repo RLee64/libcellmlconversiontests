@@ -171,8 +171,8 @@ void objectiveFunction0(double *u, double *f, void *data)
     algebraicVariables[2] = u[2];
 
     f[0] = algebraicVariables[2] - (algebraicVariables[7] + 2.0 * computedConstants[4] * (states[0] - algebraicVariables[6] - algebraicVariables[5]));
-    f[1] = algebraicVariables[6] - (algebraicVariables[2] - algebraicVariables[8]) / algebraicVariables[0] * (sin(10000.0 * voi) + 2) / 10000;
-    f[2] = algebraicVariables[5] - (algebraicVariables[2] - algebraicVariables[9]) / algebraicVariables[1] * (sin(10000.0 * voi) + 2) / 10000;
+    f[1] = algebraicVariables[6] - (algebraicVariables[2] - algebraicVariables[8]) / algebraicVariables[0] * (sin(100.0 * voi) + 2) / 100;
+    f[2] = algebraicVariables[5] - (algebraicVariables[2] - algebraicVariables[9]) / algebraicVariables[1] * (sin(100.0 * voi) + 2) / 100;
 }
 
 void findRoot0(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)

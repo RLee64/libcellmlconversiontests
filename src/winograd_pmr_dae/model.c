@@ -67,37 +67,37 @@ const VariableInfo CONSTANT_INFO[] = {
 const VariableInfo COMPUTED_CONSTANT_INFO[1] = {{"IGNORE", "IGNORE", "IGNORE"}};
 
 const VariableInfo ALGEBRAIC_INFO[] = {
-    {"I_h", "dimensionless", "I_h"},
-    {"I_CaL", "dimensionless", "I_CaL"},
-    {"I_KM", "dimensionless", "I_KM"},
-    {"I_KD", "dimensionless", "I_KD"},
-    {"I_Na", "dimensionless", "I_Na"},
-    {"I_leak", "dimensionless", "I_leak"},
-    {"I_app", "dimensionless", "stimulus_protocol"},
-    {"tau", "dimensionless", "stimulus_protocol"},
-    {"alpha", "dimensionless", "Na_m_gate"},
-    {"beta", "dimensionless", "Na_m_gate"},
-    {"tau_m", "dimensionless", "Na_m_gate"},
-    {"m_inf", "dimensionless", "Na_m_gate"},
-    {"alpha_h", "dimensionless", "Na_h_gate"},
-    {"beta_h", "dimensionless", "Na_h_gate"},
-    {"tau_h", "dimensionless", "Na_h_gate"},
-    {"h_inf", "dimensionless", "Na_h_gate"},
-    {"alpha_n", "dimensionless", "KD_n_gate"},
-    {"beta_n", "dimensionless", "KD_n_gate"},
-    {"tau_n", "dimensionless", "KD_n_gate"},
-    {"n_inf", "dimensionless", "KD_n_gate"},
-    {"p_inf", "dimensionless", "KM_p_gate"},
-    {"tau_p", "dimensionless", "KM_p_gate"},
-    {"G", "dimensionless", "G_nonlin"},
-    {"alpha_q", "dimensionless", "CaL_q_gate"},
-    {"beta_q", "dimensionless", "CaL_q_gate"},
-    {"tau_q", "dimensionless", "CaL_q_gate"},
-    {"q_inf", "dimensionless", "CaL_q_gate"},
-    {"drive_channel", "dimensionless", "dCa_i_dt"},
-    {"o_2", "dimensionless", "kinetic"},
-    {"o_1", "dimensionless", "kinetic"},
-    {"m", "dimensionless", "I_h"},
+    {"I_h", "dimensionless", "I_h"},                 // 0
+    {"I_CaL", "dimensionless", "I_CaL"},             // 1
+    {"I_KM", "dimensionless", "I_KM"},               // 2
+    {"I_KD", "dimensionless", "I_KD"},               // 3
+    {"I_Na", "dimensionless", "I_Na"},               // 4
+    {"I_leak", "dimensionless", "I_leak"},           // 5
+    {"I_app", "dimensionless", "stimulus_protocol"}, // 6
+    {"tau", "dimensionless", "stimulus_protocol"},   // 7
+    {"alpha", "dimensionless", "Na_m_gate"},         // 8
+    {"beta", "dimensionless", "Na_m_gate"},          // 9
+    {"tau_m", "dimensionless", "Na_m_gate"},         // 10
+    {"m_inf", "dimensionless", "Na_m_gate"},         // 11
+    {"alpha_h", "dimensionless", "Na_h_gate"},       // 12
+    {"beta_h", "dimensionless", "Na_h_gate"},        // 13
+    {"tau_h", "dimensionless", "Na_h_gate"},         // 14
+    {"h_inf", "dimensionless", "Na_h_gate"},         // 15
+    {"alpha_n", "dimensionless", "KD_n_gate"},       // 16
+    {"beta_n", "dimensionless", "KD_n_gate"},        // 17
+    {"tau_n", "dimensionless", "KD_n_gate"},         // 18
+    {"n_inf", "dimensionless", "KD_n_gate"},         // 19
+    {"p_inf", "dimensionless", "KM_p_gate"},         // 20
+    {"tau_p", "dimensionless", "KM_p_gate"},         // 21
+    {"G", "dimensionless", "G_nonlin"},              // 22
+    {"alpha_q", "dimensionless", "CaL_q_gate"},      // 23
+    {"beta_q", "dimensionless", "CaL_q_gate"},       // 24
+    {"tau_q", "dimensionless", "CaL_q_gate"},        // 25
+    {"q_inf", "dimensionless", "CaL_q_gate"},        // 26
+    {"drive_channel", "dimensionless", "dCa_i_dt"},  // 27
+    {"o_2", "dimensionless", "kinetic"},             // 28
+    {"o_1", "dimensionless", "kinetic"},             // 29
+    {"m", "dimensionless", "I_h"},                   // 30
     {"k_1Ca", "dimensionless", "rate_constants"},
     {"p_1", "dimensionless", "kinetic"},
     {"p_0", "dimensionless", "kinetic"},
@@ -184,20 +184,24 @@ void objectiveFunction0(double *u, double *f, void *data)
     double *algebraicVariables = ((RootFindingInfo *)data)->algebraicVariables;
 
     algebraicVariables[32] = u[0];
+    algebraicVariables[33] = u[1];
 
     f[0] = algebraicVariables[32] - (1.0 - algebraicVariables[33]);
+    f[1] = algebraicVariables[33] - (algebraicVariables[32] * constants[30] / algebraicVariables[31]);
 }
 
 void findRoot0(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
 {
     RootFindingInfo rfi = {voi, states, rates, constants, computedConstants, algebraicVariables};
-    double u[1];
+    double u[2];
 
     u[0] = algebraicVariables[32];
+    u[1] = algebraicVariables[33];
 
-    nlaSolve(objectiveFunction0, u, 1, &rfi);
+    nlaSolve(objectiveFunction0, u, 2, &rfi);
 
     algebraicVariables[32] = u[0];
+    algebraicVariables[33] = u[0];
 }
 
 void objectiveFunction1(double *u, double *f, void *data)
@@ -210,20 +214,28 @@ void objectiveFunction1(double *u, double *f, void *data)
     double *algebraicVariables = ((RootFindingInfo *)data)->algebraicVariables;
 
     algebraicVariables[28] = u[0];
+    algebraicVariables[29] = u[1];
+    algebraicVariables[36] = u[2];
 
     f[0] = algebraicVariables[28] - (1.0 - algebraicVariables[36] - algebraicVariables[29]);
+    f[1] = algebraicVariables[29] - (constants[31] / algebraicVariables[37] * algebraicVariables[28]);
+    f[2] = algebraicVariables[36] - (algebraicVariables[35] / algebraicVariables[34] * algebraicVariables[29]);
 }
 
 void findRoot1(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
 {
     RootFindingInfo rfi = {voi, states, rates, constants, computedConstants, algebraicVariables};
-    double u[1];
+    double u[3];
 
     u[0] = algebraicVariables[28];
+    u[1] = algebraicVariables[29];
+    u[2] = algebraicVariables[36];
 
-    nlaSolve(objectiveFunction1, u, 1, &rfi);
+    nlaSolve(objectiveFunction1, u, 3, &rfi);
 
     algebraicVariables[28] = u[0];
+    algebraicVariables[29] = u[1];
+    algebraicVariables[36] = u[2];
 }
 
 void initialiseArrays(double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
@@ -292,15 +304,12 @@ void computeRates(double voi, double *states, double *rates, double *constants, 
     algebraicVariables[22] = pow(constants[19], 2.0) * pow(constants[3], 2.0) * 1.0e-3 * states[0] / (constants[4] * constants[5]) * 1.0e-6 * (states[6] - constants[20] * exp(constants[19] * constants[3] * 1.0e-3 * states[0] / (constants[4] * constants[5]))) / (1.0 - exp(1.0e-3 * constants[19] * constants[3] * states[0] / (constants[4] * constants[5])));
     algebraicVariables[1] = 1000.0 * constants[18] * pow(states[5], 2.0) * algebraicVariables[22];
     algebraicVariables[31] = constants[30] * pow(states[6] / constants[34], constants[33]);
-    algebraicVariables[33] = algebraicVariables[32] * constants[30] / algebraicVariables[31];
     findRoot0(voi, states, rates, constants, computedConstants, algebraicVariables);
     algebraicVariables[37] = constants[31] * pow(algebraicVariables[32] / constants[36], constants[35]);
-    algebraicVariables[29] = constants[31] / algebraicVariables[37] * algebraicVariables[28];
     algebraicVariables[39] = constants[32] + 1000.0 / (exp((states[0] + 71.55 - constants[29]) / 14.2) + exp(-(states[0] + 89.0 - constants[29]) / 11.6));
     algebraicVariables[38] = 1.0 / (1.0 + exp((states[0] + 75.0 - constants[29]) / 5.5));
     algebraicVariables[34] = algebraicVariables[38] / algebraicVariables[39];
     algebraicVariables[35] = (1.0 - algebraicVariables[38]) / algebraicVariables[39];
-    algebraicVariables[36] = algebraicVariables[35] / algebraicVariables[34] * algebraicVariables[29];
     findRoot1(voi, states, rates, constants, computedConstants, algebraicVariables);
     algebraicVariables[30] = algebraicVariables[29] + constants[25] + algebraicVariables[28];
     algebraicVariables[0] = 1000.0 * constants[27] * algebraicVariables[30] * (states[0] - constants[26]);

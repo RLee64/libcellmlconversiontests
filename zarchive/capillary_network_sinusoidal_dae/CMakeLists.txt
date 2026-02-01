@@ -7,7 +7,7 @@ build_executable(${DIR}
     POINT_INTERVAL
         0.0001
     RELATIVE_TOLERANCE
-        1e-7
+        1e-8
     ABSOLUTE_TOLERANCE
-        1e-7
+        1e-8  
 )
