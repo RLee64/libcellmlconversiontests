@@ -140,7 +140,7 @@ void computeComputedConstants(double voi, double *states, double *rates, double 
 
 void computeRates(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
 {
-    algebraicVariables[0] = constants[1] / constants[0] * sin(2.0 * 3.14159265358979 * 500 * voi / constants[0]);
+    algebraicVariables[0] = constants[1] / constants[0] * sin(100.0 * 3.14159265358979 * voi / constants[0]);
     findRoot0(voi, states, rates, constants, computedConstants, algebraicVariables);
     rates[0] = algebraicVariables[2];
 }

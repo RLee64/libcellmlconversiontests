@@ -93,19 +93,19 @@ void computeComputedConstants(double voi, double *states, double *rates, double 
 
 void computeRates(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
 {
-    algebraicVariables[0] = 1 / 137.0 * (71.0 * voi + -442.0 * states[0]);
-    algebraicVariables[1] = -1 / 20.0 * (3.0 * voi + 19.0 * algebraicVariables[0] + 34.0 * states[0]);
-    algebraicVariables[2] = -1 / 12.0 * (25.0 * algebraicVariables[0] + voi + 16.0 * algebraicVariables[1] + 18.0 * states[0]);
-    algebraicVariables[3] = -4.0 * algebraicVariables[0] + -2.0 * states[0] + -3.0 * algebraicVariables[1] + -2.0 * algebraicVariables[2];
-    algebraicVariables[4] = -(5.0 * algebraicVariables[0] + states[0] + 4.0 * algebraicVariables[1] + 3.0 * algebraicVariables[2] + 2.0 * algebraicVariables[3]);
+    algebraicVariables[0] = 1 / 137.0 * (71.0 * voi + -12.7 * states[0]);
+    algebraicVariables[1] = -1 / 20.0 * (3.0 * voi + 19.0 * algebraicVariables[0] + 0.9 * states[0]);
+    algebraicVariables[2] = -1 / 12.0 * (25.0 * algebraicVariables[0] + voi + 16.0 * algebraicVariables[1] + 0.7 * states[0]);
+    algebraicVariables[3] = -3.0 * algebraicVariables[1] + -4.0 * algebraicVariables[0] + -2.0 * algebraicVariables[2] + -0.1 * states[0];
+    algebraicVariables[4] = -(5.0 * algebraicVariables[0] + 0.1 * states[0] + 4.0 * algebraicVariables[1] + 3.0 * algebraicVariables[2] + 2.0 * algebraicVariables[3]);
     rates[0] = algebraicVariables[4] + 3.0 * algebraicVariables[3] + -algebraicVariables[2] + 2.0 * algebraicVariables[1] + -algebraicVariables[0];
 }
 
 void computeVariables(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
 {
-    algebraicVariables[0] = 1 / 137.0 * (71.0 * voi + -442.0 * states[0]);
-    algebraicVariables[1] = -1 / 20.0 * (3.0 * voi + 19.0 * algebraicVariables[0] + 34.0 * states[0]);
-    algebraicVariables[2] = -1 / 12.0 * (25.0 * algebraicVariables[0] + voi + 16.0 * algebraicVariables[1] + 18.0 * states[0]);
-    algebraicVariables[3] = -4.0 * algebraicVariables[0] + -2.0 * states[0] + -3.0 * algebraicVariables[1] + -2.0 * algebraicVariables[2];
-    algebraicVariables[4] = -(5.0 * algebraicVariables[0] + states[0] + 4.0 * algebraicVariables[1] + 3.0 * algebraicVariables[2] + 2.0 * algebraicVariables[3]);
+    algebraicVariables[0] = 1 / 137.0 * (71.0 * voi + -12.7 * states[0]);
+    algebraicVariables[1] = -1 / 20.0 * (3.0 * voi + 19.0 * algebraicVariables[0] + 0.9 * states[0]);
+    algebraicVariables[2] = -1 / 12.0 * (25.0 * algebraicVariables[0] + voi + 16.0 * algebraicVariables[1] + 0.7 * states[0]);
+    algebraicVariables[3] = -3.0 * algebraicVariables[1] + -4.0 * algebraicVariables[0] + -2.0 * algebraicVariables[2] + -0.1 * states[0];
+    algebraicVariables[4] = -(5.0 * algebraicVariables[0] + 0.1 * states[0] + 4.0 * algebraicVariables[1] + 3.0 * algebraicVariables[2] + 2.0 * algebraicVariables[3]);
 }

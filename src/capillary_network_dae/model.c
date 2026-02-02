@@ -80,14 +80,14 @@ const VariableInfo COMPUTED_CONSTANT_INFO[] = {
     {"v_out_total", "m3_per_s", "capillary_1_module"}};
 
 const VariableInfo ALGEBRAIC_INFO[] = {
-    {"R", "Js_per_m6", "pericyte_0_module"},      // 0
-    {"R", "Js_per_m6", "pericyte_1_module"},      // 1
-    {"u_in", "J_per_m3", "pericyte_1_module"},    // 2
-    {"u", "J_per_m3", "input_vessel_module"},     // 3
-    {"u_C", "J_per_m3", "input_vessel_module"},   // 4
-    {"v", "m3_per_s", "pericyte_1_module"},       // 5
-    {"v", "m3_per_s", "pericyte_0_module"},       // 6
-    {"u_C_d", "J_per_m3", "input_vessel_module"}, // 7
+    {"R", "Js_per_m6", "pericyte_0_module"},
+    {"R", "Js_per_m6", "pericyte_1_module"},
+    {"u_in", "J_per_m3", "pericyte_1_module"},
+    {"u", "J_per_m3", "input_vessel_module"},
+    {"u_C", "J_per_m3", "input_vessel_module"},
+    {"v", "m3_per_s", "pericyte_1_module"},
+    {"v", "m3_per_s", "pericyte_0_module"},
+    {"u_C_d", "J_per_m3", "input_vessel_module"},
     {"u", "J_per_m3", "pericyte_0_module"},
     {"u", "J_per_m3", "pericyte_1_module"},
     {"u", "J_per_m3", "capillary_0_module"},

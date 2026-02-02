@@ -95,12 +95,12 @@ void computeComputedConstants(double voi, double *states, double *rates, double 
 
 void computeRates(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
 {
-    algebraicVariables[2] = 1 / 2.0 * constants[1] * pow(constants[0], -1.0) * sin(2.0 * 3.14159265358979 * 500 * voi * pow(constants[0], -1.0));
+    algebraicVariables[0] = constants[1] / constants[0] * sin(100.0 * 3.14159265358979 * voi / constants[0]);
+    algebraicVariables[1] = -1 / 2.0 * algebraicVariables[0];
+    algebraicVariables[2] = algebraicVariables[1] + algebraicVariables[0];
     rates[0] = algebraicVariables[2];
 }
 
 void computeVariables(double voi, double *states, double *rates, double *constants, double *computedConstants, double *algebraicVariables)
 {
-    algebraicVariables[0] = constants[1] / constants[0] * sin(2.0 * 3.14159265358979 * 500 * voi / constants[0]);
-    algebraicVariables[1] = algebraicVariables[2] - algebraicVariables[0];
 }

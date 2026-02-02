@@ -106,8 +106,8 @@ void objectiveFunction0(double *u, double *f, void *data)
     algebraicVariables[1] = u[1];
     algebraicVariables[2] = u[2];
 
-    f[0] = algebraicVariables[2] + 2.0 * algebraicVariables[1] + 3.0 * algebraicVariables[0] + states[0] - 0.0;
-    f[1] = algebraicVariables[2] + algebraicVariables[1] + algebraicVariables[0] + -states[0] - 0.0;
+    f[0] = algebraicVariables[2] + 2.0 * algebraicVariables[1] + 3.0 * algebraicVariables[0] - 0.0;
+    f[1] = algebraicVariables[2] + algebraicVariables[1] + algebraicVariables[0] + 0.1 * states[0] - 0.0;
     f[2] = 4.0 * algebraicVariables[2] + -3.0 * algebraicVariables[1] + 2.0 * algebraicVariables[0] + voi - 0.0;
 }
 

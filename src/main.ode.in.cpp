@@ -343,9 +343,10 @@ int main(int argc, char **argv)
         outputBuffer.push_back(std::move(row));
     }
 
-    std::cout << "Pre output took: " << getCounter() / 1000 << " seconds" << std::endl;
-
     // Output to csv
+
+    // std::cout << "Pre output took: " << getCounter() / 1000 << " seconds" << std::endl;
+
     // std::ofstream file(std::string(argv[0]) + "___c.csv");
     // printHeaders(file);
 

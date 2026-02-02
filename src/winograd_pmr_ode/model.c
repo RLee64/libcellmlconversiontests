@@ -69,46 +69,46 @@ const VariableInfo COMPUTED_CONSTANT_INFO[1] = {
 };
 
 const VariableInfo ALGEBRAIC_INFO[] = {
-    {"I_h", "milliampere_per_cm_squared", "membrane"},    // 0
-    {"I_CaL", "milliampere_per_cm_squared", "membrane"},  // 1
-    {"I_KM", "milliampere_per_cm_squared", "membrane"},   // 2
-    {"I_KD", "milliampere_per_cm_squared", "membrane"},   // 3
-    {"I_Na", "milliampere_per_cm_squared", "membrane"},   // 4
-    {"I_leak", "milliampere_per_cm_squared", "membrane"}, // 5
-    {"I_app", "milliampere_per_cm_squared", "membrane"},  // 6
-    {"tau", "second", "stimulus_protocol"},               // 7
-    {"alpha", "per_second", "Na_m_gate"},                 // 8
-    {"beta", "per_second", "Na_m_gate"},                  // 9
-    {"tau_m", "second", "Na_m_gate"},                     // 10
-    {"m_inf", "dimensionless", "Na_m_gate"},              // 11
-    {"alpha_h", "per_second", "Na_h_gate"},               // 12
-    {"beta_h", "per_second", "Na_h_gate"},                // 13
-    {"tau_h", "second", "Na_h_gate"},                     // 14
-    {"h_inf", "dimensionless", "Na_h_gate"},              // 15
-    {"alpha_n", "per_second", "KD_n_gate"},               // 16
-    {"beta_n", "per_second", "KD_n_gate"},                // 17
-    {"tau_n", "second", "KD_n_gate"},                     // 18
-    {"n_inf", "dimensionless", "KD_n_gate"},              // 19
-    {"p_inf", "dimensionless", "KM_p_gate"},              // 20
-    {"tau_p", "second", "KM_p_gate"},                     // 21
-    {"G", "coulomb_per_cm_cubed", "I_CaL"},               // 22
-    {"alpha_q", "per_second", "CaL_q_gate"},              // 23
-    {"beta_q", "per_second", "CaL_q_gate"},               // 24
-    {"tau_q", "second", "CaL_q_gate"},                    // 25
-    {"q_inf", "dimensionless", "CaL_q_gate"},             // 26
-    {"drive_channel", "mM_per_second", "dCa_i_dt"},       // 27
-    {"o_2", "dimensionless", "I_h"},                      // 28
-    {"o_1", "dimensionless", "I_h"},                      // 29
-    {"m", "dimensionless", "I_h"},                        // 30
-    {"k_1Ca", "per_second", "kinetic"},                   // 31
-    {"p_1", "dimensionless", "kinetic"},                  // 32
-    {"p_0", "dimensionless", "kinetic"},                  // 33
-    {"alpha", "dimensionless", "kinetic"},                // 34
-    {"beta", "dimensionless", "kinetic"},                 // 35
-    {"c_1", "dimensionless", "kinetic"},                  // 36
-    {"k_3p", "per_second", "kinetic"},                    // 37
-    {"h_inf", "second", "rate_constants"},                // 38
-    {"tau_s", "second", "rate_constants"}};               // 39
+    {"I_h", "milliampere_per_cm_squared", "I_h"},
+    {"I_CaL", "milliampere_per_cm_squared", "I_CaL"},
+    {"I_KM", "milliampere_per_cm_squared", "I_KM"},
+    {"I_KD", "milliampere_per_cm_squared", "I_KD"},
+    {"I_Na", "milliampere_per_cm_squared", "I_Na"},
+    {"I_leak", "milliampere_per_cm_squared", "I_leak"},
+    {"I_app", "milliampere_per_cm_squared", "stimulus_protocol"},
+    {"tau", "second", "stimulus_protocol"},
+    {"alpha", "per_second", "Na_m_gate"},
+    {"beta", "per_second", "Na_m_gate"},
+    {"tau_m", "second", "Na_m_gate"},
+    {"m_inf", "dimensionless", "Na_m_gate"},
+    {"alpha_h", "per_second", "Na_h_gate"},
+    {"beta_h", "per_second", "Na_h_gate"},
+    {"tau_h", "second", "Na_h_gate"},
+    {"h_inf", "dimensionless", "Na_h_gate"},
+    {"alpha_n", "per_second", "KD_n_gate"},
+    {"beta_n", "per_second", "KD_n_gate"},
+    {"tau_n", "second", "KD_n_gate"},
+    {"n_inf", "dimensionless", "KD_n_gate"},
+    {"p_inf", "dimensionless", "KM_p_gate"},
+    {"tau_p", "second", "KM_p_gate"},
+    {"G", "coulomb_per_cm_cubed", "G_nonlin"},
+    {"alpha_q", "per_second", "CaL_q_gate"},
+    {"beta_q", "per_second", "CaL_q_gate"},
+    {"tau_q", "second", "CaL_q_gate"},
+    {"q_inf", "dimensionless", "CaL_q_gate"},
+    {"drive_channel", "mM_per_second", "dCa_i_dt"},
+    {"o_2", "dimensionless", "kinetic"},
+    {"o_1", "dimensionless", "kinetic"},
+    {"m", "dimensionless", "I_h"},
+    {"k_1Ca", "per_second", "rate_constants"},
+    {"p_1", "dimensionless", "kinetic"},
+    {"p_0", "dimensionless", "kinetic"},
+    {"alpha", "dimensionless", "rate_constants"},
+    {"beta", "dimensionless", "rate_constants"},
+    {"c_1", "dimensionless", "kinetic"},
+    {"k_3p", "per_second", "rate_constants"},
+    {"h_inf", "second", "rate_constants"},
+    {"tau_s", "second", "rate_constants"}};
 
 double *createStatesArray()
 {
@@ -224,14 +224,19 @@ void computeRates(double voi, double *states, double *rates, double *constants, 
     algebraicVariables[4] = 1000.0 * constants[13] * pow(states[2], 3.0) * states[1] * (states[0] - constants[12]);
     algebraicVariables[3] = 1000.0 * constants[15] * pow(states[3], 4.0) * (states[0] - constants[14]);
     algebraicVariables[2] = 1000.0 * constants[16] * states[4] * (states[0] - constants[14]);
-    algebraicVariables[32] = pow(pow(states[6], constants[33]) + pow(constants[34], constants[33]), -1.0) * pow(states[6], constants[33]);
-    algebraicVariables[29] = pow(constants[36], constants[35]) * pow(pow(algebraicVariables[32], constants[35]) - pow(constants[36], constants[35]) * (-1.0 - pow(2.71828182845905, 0.181818181818182 * (75.0 + states[0] - constants[29]))), -1.0);
+    algebraicVariables[22] = pow(constants[19], 2.0) * pow(constants[3], 2.0) * 0.001 * states[0] / (constants[4] * constants[5]) * 0.000001 * (states[6] - constants[20] * exp(constants[19] * constants[3] * 0.001 * states[0] / (constants[4] * constants[5]))) / (1.0 - exp(0.001 * constants[19] * constants[3] * states[0] / (constants[4] * constants[5])));
+    algebraicVariables[1] = 1000.0 * constants[18] * pow(states[5], 2.0) * algebraicVariables[22];
+    algebraicVariables[31] = constants[30] * pow(states[6] / constants[34], constants[33]);
+    algebraicVariables[32] = algebraicVariables[31] * pow(algebraicVariables[31] + constants[30], -1.0);
     algebraicVariables[37] = constants[31] * pow(algebraicVariables[32] / constants[36], constants[35]);
+    algebraicVariables[38] = 1.0 / (1.0 + exp((states[0] + 75.0 - constants[29]) / 5.5));
+    algebraicVariables[39] = constants[32] + 1000.0 / (exp((states[0] + 71.55 - constants[29]) / 14.2) + exp(-(states[0] + 89.0 - constants[29]) / 11.6));
+    algebraicVariables[34] = algebraicVariables[38] / algebraicVariables[39];
+    algebraicVariables[35] = (1.0 - algebraicVariables[38]) / algebraicVariables[39];
+    algebraicVariables[29] = pow(constants[36], constants[35]) * algebraicVariables[34] * pow(pow(algebraicVariables[32], constants[35]) * algebraicVariables[34] - pow(constants[36], constants[35]) * (-algebraicVariables[35] - algebraicVariables[34]), -1.0);
     algebraicVariables[28] = algebraicVariables[29] * pow(constants[31], -1.0) * algebraicVariables[37];
     algebraicVariables[30] = algebraicVariables[29] + constants[25] + algebraicVariables[28];
     algebraicVariables[0] = 1000.0 * constants[27] * algebraicVariables[30] * (states[0] - constants[26]);
-    algebraicVariables[22] = pow(constants[19], 2.0) * pow(constants[3], 2.0) * 0.001 * states[0] / (constants[4] * constants[5]) * 0.000001 * (states[6] - constants[20] * exp(constants[19] * constants[3] * 0.001 * states[0] / (constants[4] * constants[5]))) / (1.0 - exp(0.001 * constants[19] * constants[3] * states[0] / (constants[4] * constants[5])));
-    algebraicVariables[1] = 1000.0 * constants[18] * pow(states[5], 2.0) * algebraicVariables[22];
     rates[0] = 0.001 * (algebraicVariables[6] + -algebraicVariables[5] - algebraicVariables[4] - algebraicVariables[3] - algebraicVariables[2] - algebraicVariables[1] - algebraicVariables[0]) / constants[0];
     algebraicVariables[8] = (fabs((13.0 + constants[1] - states[0]) / 4.0) < 0.000001) ? 0.32 * 4.0 * (1.0 - (13.0 + constants[1] - states[0]) / (2.0 * 4.0)) : 0.32 * (13.0 + constants[1] - states[0]) / (exp((13.0 + constants[1] - states[0]) / 4.0) - 1.0);
     algebraicVariables[9] = (fabs(-(states[0] - constants[1] - 40.0) / 5.0) < 0.000001) ? -0.28 * 5.0 * (1.0 - (-(states[0] - constants[1] - 40.0) / (2.0 * 5.0))) : -0.28 * (states[0] - constants[1] - 40.0) / (exp(-(states[0] - constants[1] - 40.0) / 5.0) - 1.0);
@@ -287,17 +292,17 @@ void computeVariables(double voi, double *states, double *rates, double *constan
     algebraicVariables[25] = 1.0 / (algebraicVariables[23] + algebraicVariables[24]);
     algebraicVariables[26] = 1.0 / (1.0 + exp((states[0] + 10.0) / -10.0));
     algebraicVariables[27] = constants[22] * algebraicVariables[1] / (2.0 * constants[3] * constants[21]);
-    algebraicVariables[32] = pow(pow(states[6], constants[33]) + pow(constants[34], constants[33]), -1.0) * pow(states[6], constants[33]);
-    algebraicVariables[29] = pow(constants[36], constants[35]) * pow(pow(algebraicVariables[32], constants[35]) - pow(constants[36], constants[35]) * (-1.0 - pow(2.71828182845905, 0.181818181818182 * (75.0 + states[0] - constants[29]))), -1.0);
-    algebraicVariables[37] = constants[31] * pow(algebraicVariables[32] / constants[36], constants[35]);
-    algebraicVariables[28] = algebraicVariables[29] * pow(constants[31], -1.0) * algebraicVariables[37];
-    algebraicVariables[30] = algebraicVariables[29] + constants[25] + algebraicVariables[28];
-    algebraicVariables[0] = 1000.0 * constants[27] * algebraicVariables[30] * (states[0] - constants[26]);
     algebraicVariables[31] = constants[30] * pow(states[6] / constants[34], constants[33]);
-    algebraicVariables[33] = algebraicVariables[32] * constants[30] / algebraicVariables[31];
+    algebraicVariables[32] = algebraicVariables[31] * pow(algebraicVariables[31] + constants[30], -1.0);
+    algebraicVariables[37] = constants[31] * pow(algebraicVariables[32] / constants[36], constants[35]);
     algebraicVariables[38] = 1.0 / (1.0 + exp((states[0] + 75.0 - constants[29]) / 5.5));
     algebraicVariables[39] = constants[32] + 1000.0 / (exp((states[0] + 71.55 - constants[29]) / 14.2) + exp(-(states[0] + 89.0 - constants[29]) / 11.6));
     algebraicVariables[34] = algebraicVariables[38] / algebraicVariables[39];
     algebraicVariables[35] = (1.0 - algebraicVariables[38]) / algebraicVariables[39];
+    algebraicVariables[29] = pow(constants[36], constants[35]) * algebraicVariables[34] * pow(pow(algebraicVariables[32], constants[35]) * algebraicVariables[34] - pow(constants[36], constants[35]) * (-algebraicVariables[35] - algebraicVariables[34]), -1.0);
+    algebraicVariables[28] = algebraicVariables[29] * pow(constants[31], -1.0) * algebraicVariables[37];
+    algebraicVariables[30] = algebraicVariables[29] + constants[25] + algebraicVariables[28];
+    algebraicVariables[0] = 1000.0 * constants[27] * algebraicVariables[30] * (states[0] - constants[26]);
+    algebraicVariables[33] = algebraicVariables[32] * constants[30] / algebraicVariables[31];
     algebraicVariables[36] = algebraicVariables[35] / algebraicVariables[34] * algebraicVariables[29];
 }

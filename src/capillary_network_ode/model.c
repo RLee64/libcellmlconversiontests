@@ -80,12 +80,12 @@ const VariableInfo COMPUTED_CONSTANT_INFO[] = {
     {"v_out_total", "m3_per_s", "capillary_1_module"}};
 
 const VariableInfo ALGEBRAIC_INFO[] = {
-    {"u_d", "J_per_m3", "input_vessel_module"},     // 0
-    {"u", "J_per_m3", "input_vessel_module"},       // 1
-    {"u_C", "J_per_m3", "input_vessel_module"},     // 2
-    {"v_out_2", "m3_per_s", "input_vessel_module"}, // 3
-    {"v_out_1", "m3_per_s", "input_vessel_module"}, // 4
-    {"u_C_d", "J_per_m3", "input_vessel_module"},   // 5
+    {"u_d", "J_per_m3", "input_vessel_module"},
+    {"u", "J_per_m3", "input_vessel_module"},
+    {"u_C", "J_per_m3", "input_vessel_module"},
+    {"v", "m3_per_s", "pericyte_1_module"},
+    {"v", "m3_per_s", "pericyte_0_module"},
+    {"u_C_d", "J_per_m3", "input_vessel_module"},
     {"u", "J_per_m3", "pericyte_0_module"},
     {"u", "J_per_m3", "pericyte_1_module"},
     {"u", "J_per_m3", "capillary_0_module"},
@@ -214,12 +214,13 @@ void computeRates(double voi, double *states, double *rates, double *constants, 
 {
     algebraicVariables[2] = states[1] / (computedConstants[2] / 2.0) + constants[4];
     algebraicVariables[1] = algebraicVariables[2] + 2.0 * computedConstants[4] * (constants[5] - states[0]);
-    algebraicVariables[0] = pow(3.14159265358979 * constants[7] * constants[10] * pow(constants[2], 2.0) * constants[8] * constants[11] * constants[1] + -0.01 * (-constants[10] * constants[8] * constants[11] - constants[7] * constants[8] * constants[11]) * constants[0] * (pow(2.71828182845905, constants[2] * constants[31]) * constants[30] + pow(2.71828182845905, constants[2] * constants[33]) * constants[32]), -1.0) * (constants[7] * constants[10] * constants[8] * constants[11] * (3.14159265358979 * pow(constants[2], 2.0) * constants[4] * constants[1] + states[2] * constants[0] * (pow(2.71828182845905, constants[2] * constants[31]) * constants[30] + pow(2.71828182845905, constants[2] * constants[33]) * constants[32])) + 0.01 * (constants[10] * (states[4] + constants[6] * constants[8] + states[0] * constants[7] * constants[8]) * constants[11] + constants[7] * constants[8] * (states[6] + constants[9] * constants[11])) * constants[0] * (pow(2.71828182845905, constants[2] * constants[31]) * constants[30] + pow(2.71828182845905, constants[2] * constants[33]) * constants[32]));
+    algebraicVariables[7] = states[6] / constants[11] + constants[9];
+    algebraicVariables[6] = states[4] / constants[8] + constants[6];
+    algebraicVariables[5] = states[2] / (computedConstants[2] / 2.0) + constants[4];
+    algebraicVariables[0] = (algebraicVariables[5] * constants[7] * constants[10] + 2.0 * computedConstants[4] * (constants[10] * (states[0] * constants[7] + algebraicVariables[6]) + algebraicVariables[7] * constants[7])) * pow(-2.0 * (-constants[10] - constants[7]) * computedConstants[4] + constants[7] * constants[10], -1.0);
     rates[0] = (algebraicVariables[1] - algebraicVariables[0] - computedConstants[3] * states[0] - constants[26] * constants[27] * constants[29] * constants[1] * cos(constants[3] * 3.14159265358979 / 180.0)) / computedConstants[1];
     rates[1] = constants[5] - states[0];
-    algebraicVariables[7] = states[6] / constants[11] + constants[9];
     algebraicVariables[3] = (algebraicVariables[0] - algebraicVariables[7]) / constants[10];
-    algebraicVariables[6] = states[4] / constants[8] + constants[6];
     algebraicVariables[4] = (algebraicVariables[0] - algebraicVariables[6]) / constants[7];
     rates[2] = states[0] - algebraicVariables[4] - algebraicVariables[3];
     rates[4] = algebraicVariables[4] - states[3];
@@ -237,9 +238,10 @@ void computeVariables(double voi, double *states, double *rates, double *constan
     algebraicVariables[2] = states[1] / (computedConstants[2] / 2.0) + constants[4];
     algebraicVariables[5] = states[2] / (computedConstants[2] / 2.0) + constants[4];
     algebraicVariables[1] = algebraicVariables[2] + 2.0 * computedConstants[4] * (constants[5] - states[0]);
-    algebraicVariables[6] = states[4] / constants[8] + constants[6];
-    algebraicVariables[4] = (algebraicVariables[0] - algebraicVariables[6]) / constants[7];
     algebraicVariables[7] = states[6] / constants[11] + constants[9];
+    algebraicVariables[6] = states[4] / constants[8] + constants[6];
+    algebraicVariables[0] = (algebraicVariables[5] * constants[7] * constants[10] + 2.0 * computedConstants[4] * (constants[10] * (states[0] * constants[7] + algebraicVariables[6]) + algebraicVariables[7] * constants[7])) * pow(-2.0 * (-constants[10] - constants[7]) * computedConstants[4] + constants[7] * constants[10], -1.0);
+    algebraicVariables[4] = (algebraicVariables[0] - algebraicVariables[6]) / constants[7];
     algebraicVariables[3] = (algebraicVariables[0] - algebraicVariables[7]) / constants[10];
     algebraicVariables[8] = states[7] / computedConstants[7] + constants[16];
     algebraicVariables[9] = states[8] / computedConstants[12] + constants[23];
