@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#"
+       xmlns:cellml="http://www.cellml.org/cellml/2.0#"
+       name="dae_algebraic_loop_square_wave">
+
+  <units name="per_second">
+    <unit units="second" exponent="-1"/>
+  </units>
+
+  <!-- Environment -->
+  <component name="environment">
+    <variable name="time" units="second" interface="public"/>
+  </component>
+
+  <!-- Parameters -->
+  <component name="parameters">
+    <variable name="period" units="second" initial_value="1" interface="public"/>
+    <variable name="amp" units="dimensionless" initial_value="1" interface="public"/>
+  </component>
+
+<component name="forcing">
+  <variable name="time" units="second" interface="public"/>
+  <variable name="period" units="second" interface="public"/>
+  <variable name="amp" units="dimensionless" interface="public"/>
+  <variable name="f" units="per_second" interface="public"/>
+
+  <math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+      <eq/>
+      <ci>f</ci>
+
+      <apply>
+        <times/>
+
+        <!-- amp / period -->
+        <apply>
+          <divide/>
+          <ci>amp</ci>
+          <ci>period</ci>
+        </apply>
+
+        <!-- sin(100*pi*time/period) -->
+        <apply>
+          <sin/>
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <cn cellml:units="dimensionless">100</cn>
+              <pi/>
+              <ci>time</ci>
+            </apply>
+            <ci>period</ci>
+          </apply>
+        </apply>
+
+      </apply>
+    </apply>
+  </math>
+</component>
+
+
+  <!-- Algebraic loop -->
+  <component name="algebraic_loop">
+    <variable name="f" units="per_second" interface="public"/>
+    <variable name="a" units="per_second" interface="public" initial_value="0"/>
+    <variable name="b" units="per_second" interface="private" initial_value="0"/>
+
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply>
+        <eq/>
+        <ci>a</ci>
+        <apply>
+          <plus/>
+          <ci>b</ci>
+          <ci>f</ci>
+        </apply>
+      </apply>
+
+      <apply>
+        <eq/>
+        <ci>b</ci>
+        <apply>
+          <minus/>
+          <ci>a</ci>
+        </apply>
+      </apply>
+    </math>
+  </component>
+
+  <!-- State -->
+  <component name="state">
+    <variable name="time" units="second" interface="public"/>
+    <variable name="s" units="dimensionless" initial_value="0"/>
+    <variable name="a" units="per_second" interface="public"/>
+
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>s</ci>
+        </apply>
+        <ci>a</ci>
+      </apply>
+    </math>
+  </component>
+
+  <!-- Connections -->
+  <connection component_1="environment" component_2="forcing">
+    <map_variables variable_1="time" variable_2="time"/>
+  </connection>
+
+  <connection component_1="environment" component_2="state">
+    <map_variables variable_1="time" variable_2="time"/>
+  </connection>
+
+  <connection component_1="parameters" component_2="forcing">
+    <map_variables variable_1="period" variable_2="period"/>
+    <map_variables variable_1="amp" variable_2="amp"/>
+  </connection>
+
+  <connection component_1="forcing" component_2="algebraic_loop">
+    <map_variables variable_1="f" variable_2="f"/>
+  </connection>
+
+  <connection component_1="algebraic_loop" component_2="state">
+    <map_variables variable_1="a" variable_2="a"/>
+  </connection>
+
+</model>

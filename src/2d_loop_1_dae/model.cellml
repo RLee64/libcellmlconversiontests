@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="linear_system_2d_with_dynamics"
+       xmlns="http://www.cellml.org/cellml/2.0#"
+       xmlns:cellml="http://www.cellml.org/cellml/2.0#">
+
+  <component name="algebraic_component">
+
+    <!-- Algebraic variables -->
+    <variable name="a" units="dimensionless" initial_value="0"/>
+    <variable name="b" units="dimensionless" initial_value="0"/>
+
+    <!-- Dynamic variable -->
+    <variable name="x" units="dimensionless" initial_value="0"/>
+
+    <!-- Time -->
+    <variable name="t" units="dimensionless"/>
+
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+
+      <!-- dx/dt = a + 3b -->
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>x</ci>
+        </apply>
+        <apply>
+          <plus/>
+          <ci>a</ci>
+          <apply><times/><cn cellml:units="dimensionless">3</cn><ci>b</ci></apply>
+        </apply>
+      </apply>
+
+      <!-- a + 2b + x = 0 -->
+      <apply>
+        <eq/>
+        <apply>
+          <plus/>
+          <ci>a</ci>
+          <apply><times/><cn cellml:units="dimensionless">2</cn><ci>b</ci></apply>
+          <ci>x</ci>
+        </apply>
+        <cn cellml:units="dimensionless">0</cn>
+      </apply>
+
+      <!-- a + b - x = 0 -->
+      <apply>
+        <eq/>
+        <apply>
+          <plus/>
+          <ci>a</ci>
+          <ci>b</ci>
+          <apply>
+            <minus/>
+            <ci>x</ci>
+          </apply>
+        </apply>
+        <cn cellml:units="dimensionless">0</cn>
+      </apply>
+
+    </math>
+  </component>
+</model>
